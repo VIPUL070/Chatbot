@@ -12,27 +12,59 @@
 
     <script src="https://unpkg.com/supersimpledev/react.js"></script>
     <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
 
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
 
         //component
-        const ChatInput = () => {
+        const ChatInput = ({chatMessages , setChatMessages}) => {
             const [inputText , setInputText] = React.useState('');
 
             function saveInputText(event){
-                setInputText(target.value);
+                setInputText(event.target.value);
             }
 
-            function sendMessage(){
-                   setChatMessages([
+            async function sendMessage(){
+                const newChatMessages =[
                     ...chatMessages,
                     {
-                       message :"test",
+                       message : inputText,
                        sender : "user",
                        id : crypto.randomUUID()
                     }
+                ] 
+                setChatMessages(newChatMessages);
+
+                 setChatMessages([
+                    ...newChatMessages,
+                    {
+                       message : "Loading.......",
+                       sender : "bot",
+                       id : crypto.randomUUID()
+                    }
                 ]);
+
+                const response = await Chatbot.getResponseAsync(inputText);
+                 setChatMessages([
+                    ...newChatMessages,
+                    {
+                       message : response,
+                       sender : "bot",
+                       id : crypto.randomUUID()
+                    }
+                ]);
+
+                setInputText('');
+            }
+
+            function keyPressed(event){
+                if(event.key == "Enter"){
+                    sendMessage();
+                }
+                if(event.key == "Escape"){
+                    setInputText('');
+                }
             }
 
             return (
@@ -40,6 +72,8 @@
                     <input type="text"
                         placeholder="Send a message to Chatbot" size="50"
                         onChange={saveInputText}
+                        onKeyDown={keyPressed}
+                        value={inputText}      //controlled inputs
                     />
                     <button onClick={sendMessage}>Send</button>
                 </div>
@@ -47,8 +81,40 @@
         }
 
         //states
-        const ChatMessages = () => {
-            const [chatMessages , setChatMessages] = React.useState(
+        const ChatMessages = ({chatMessages}) => {
+            return (
+                <>
+                    {chatMessages.map((chatMessage) => {
+                        return (
+                            <ChatMsg
+                                message={chatMessage.message}
+                                sender={chatMessage.sender}
+                                key={chatMessage.id}
+                            />
+                        );
+                    })}
+                </>
+            );
+
+        }
+
+
+        //props makes our component reusable and are objects basically
+        const ChatMsg = (props) => {
+            const { message, sender } = props; //deconstructing
+
+            return (
+                // if statement inside JSX [Guard operator &&]
+                <div>
+                    {sender === "bot" && <img src="images/robot.png" width="40px" height="40px" />}
+                    {message}
+                    {sender === "user" && <img src="images/user.png" width="40px" height="40px" />}
+                </div>
+            );
+        }
+
+        const App = () => {
+              const [chatMessages , setChatMessages] = React.useState(
             [
                 {
                     message: "Hello chatbot",
@@ -77,42 +143,11 @@
             // const chatMessages = array[0];       //current data
             // const setChatMessages = array[1];    //updater function
 
-            return (
-                <>
-                    {chatMessages.map((chatMessage) => {
-                        return (
-                            <ChatMsg
-                                message={chatMessage.message}
-                                sender={chatMessage.sender}
-                                key={chatMessage.id}
-                            />
-                        );
-                    })}
-                </>
-            );
-        }
-
-
-        //props makes our component reusable and are objects basically
-        const ChatMsg = (props) => {
-            const { message, sender } = props; //deconstructing
-
-            return (
-                // if statement inside JSX [Guard operator &&]
-                <div>
-                    {sender === "bot" && <img src="robot.png" width="40px" height="40px" />}
-                    {message}
-                    {sender === "user" && <img src="user.png" width="40px" height="40px" />}
-                </div>
-            );
-        }
-
-        const App = () => {
             //fragment
             return (
                 <>
-                    <ChatInput />
-                    <ChatMessages />
+                    <ChatInput chatMessages = {chatMessages} setChatMessages ={setChatMessages}/>
+                    <ChatMessages chatMessages = {chatMessages} />
                 </>
             );
         }
