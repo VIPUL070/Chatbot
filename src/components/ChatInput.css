@@ -1,0 +1,22 @@
+.chat-input {
+  display: flex;
+  gap: 1rem;
+  min-width: 40dvw;
+  padding-bottom: 4vh;
+}
+
+.input {
+  padding: 1.5vh 2vw;
+  font-size: 1rem;
+  border-radius: .5rem;
+  flex-grow: 1;
+}
+
+.send-btn {
+  background-color: rgb(25, 135, 84);
+  color: white;
+  padding: 1.5vh 2vw;
+  font-size: 1rem;
+  border: none;
+  border-radius: .5rem;
+}

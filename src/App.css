@@ -1,0 +1,11 @@
+/* component styles */
+.app-container {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 40dvw;
+
+}
+
+

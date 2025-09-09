@@ -1,0 +1,11 @@
+.chat-message-container {
+  padding: 4vh 0vw;
+  min-width: 40dvw;
+  flex-grow: 1;
+  overflow: auto;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+}
