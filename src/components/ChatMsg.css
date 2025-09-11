@@ -23,3 +23,10 @@
   height: 45px;
   width: 45px;
 }
+
+.chat-time{
+  font-size: .7rem;
+  color: grey;
+  margin-top: 1vh;
+
+}

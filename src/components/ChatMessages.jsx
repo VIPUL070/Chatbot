@@ -20,6 +20,7 @@ const ChatMessages = ({ chatMessages }) => {
           <ChatMsg
             message={chatMessage.message}
             sender={chatMessage.sender}
+            currTime = {chatMessage.currTime}
             key={chatMessage.id}
           />
         );

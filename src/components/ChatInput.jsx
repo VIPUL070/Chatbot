@@ -2,7 +2,20 @@ import { useState } from 'react'
 import { Chatbot } from 'supersimpledev';
 import './ChatInput.css';
 
+const formatTime = (date) => {
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // Handle midnight (0 hours) as 12
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  return hours + ':' + minutes + ' ' + ampm;
+};
+
+
 const ChatInput = ({ chatMessages, setChatMessages }) => {
+  let currTime = formatTime(new Date());
+
   const [inputText, setInputText] = useState('');
 
   function saveInputText(event) {
@@ -15,6 +28,7 @@ const ChatInput = ({ chatMessages, setChatMessages }) => {
       {
         message: inputText,
         sender: "user",
+        currTime : currTime,
         id: crypto.randomUUID()
       }
     ]
@@ -35,6 +49,7 @@ const ChatInput = ({ chatMessages, setChatMessages }) => {
       {
         message: response,
         sender: "bot",
+        currTime : currTime,
         id: crypto.randomUUID()
       }
     ]);
